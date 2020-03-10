@@ -32,4 +32,5 @@ data1, list type containing:
 The following model options must be specified:
 * **iterations**: positive integer number of samples for MCMC
 * **burnIn**: non-negative integer number of iterations that will be discarded from the final Metropolis-Hastings MCMC routine, referred to as the burn-in period
-* **number_of_parameters**: the number of parameters to be estimated by MCMC. 
+* **number_of_parameters**: the number of parameters to be estimated by MCMC
+* **vals**: list containing starting values and standard deviations of the proposal for each of 3 MCMC chains
