@@ -9,7 +9,7 @@ depts <- readRDS("figures/data/admin1_names.RDS")
 
 #Creating a column with correct (accented) department names
 
-dati <- chik1
+dati <- chik
 
 dati$admin1_map <- NA
 for (i in unique(dati$admin1)){
@@ -56,6 +56,16 @@ for (i in seq_len(nrow(dati))) {
       1+(53-first_week)+((dati$year[i]-(first_year+1))*53) + dati$week[i]
   }
 }
+
+no_weeks <- max(dati$week_no)
+
+# fix 2016 weeks
+dati1 <- dati[(dati$week_no < 84),]
+dati2 <- dati[(dati$week_no > 84),]
+
+dati2$week_no <- dati2$week_no - 1
+
+dati <- rbind(dati1, dati2)
 
 no_weeks <- max(dati$week_no)
 

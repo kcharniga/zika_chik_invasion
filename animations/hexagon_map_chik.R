@@ -19,7 +19,7 @@ library(gganimate)
 library(transformr)
 
 # load disease data
-chik <- readRDS("animations/data/chik_monthly_inc_for_animation.RDS")
+chik <- readRDS("animations/data/chik_monthly_inc_for_animation_incl2016.RDS")
 
 new_df <- chik
 

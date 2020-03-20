@@ -8,7 +8,7 @@ library(dplyr)
 lat_lon <- readRDS("figures/data/lat_lon_complete.RDS")
 
 # city invasion times
-invasion_times <- readRDS('figures/data/chik_first_reported_cases_335.RDS') 
+invasion_times <- readRDS('figures/data/chik_first_reported_cases_338.RDS') 
 invasion_times <- rename(invasion_times, admin2 = admin2_code)
 
 # subtract 1 from first reports to start at 0
@@ -106,7 +106,7 @@ plot(x = chik_first_city_dist, y = chik_first_report_ordered,
      xlab = "Great Circle Distance (km)", ylab = "Week of invasion", pch = 20, cex = 0.75, 
      cex.lab = 0.8, cex.axis = 0.8, xaxs="i", yaxs="i", xlim = c(0,1250), ylim = c(0,72))
 abline(lm(chik_first_report_ordered~chik_first_city_dist), col="black") # regression line (y~x) 
-mtext(expression(paste("Correlation: 0.36, p<0.0001")), line = 1, cex = 0.8)
+mtext(expression(paste("Correlation: 0.37, p<0.0001")), line = 1, cex = 0.8)
 mtext(text = "A", col = "black", cex = 1.2, side = 3, adj = 0, line = 2, font = (face=2))
 
 par(mar=c(4,2,4,4))

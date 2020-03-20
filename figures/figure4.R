@@ -1,12 +1,12 @@
 ##### Figure 4 Probability distribution of first reported cases 
 
-# 6-2-20
+# 16-3-20
 
 ## CHIKV
 
 
 # invasion times
-invasion_week <- readRDS("figures/data/chik_first_reported_cases_335.RDS")
+invasion_week <- readRDS("figures/data/chik_first_reported_cases_338.RDS")
 invasion_week <- invasion_week[order(invasion_week$first_report), ]
 
 # load data
@@ -25,11 +25,11 @@ d_cities <- data$d_cities
 H <- data$H
 
 # median parameter estimates from MCMC
-b <- 0.22
-g <- 1.68
+b <- 0.24
+g <- 1.69
 v <- 0.65
 m <- 0
-e <- 0.86
+e <- 0.84
 y <- 0.35
 
 # Define kernel
@@ -49,10 +49,10 @@ kernel[is.na(kernel)] <- 0
 # Model equation
 foi = b*(H^y*infectious)%*%kernel
 
-Ptj2 <- matrix(NA, 69, 335)
-logPtj <- matrix(NA, 69, 335)
-I2 <- matrix(1, 69, 335)
-J2 <- matrix(NA, 69, 335)
+Ptj2 <- matrix(NA, 69, 338)
+logPtj <- matrix(NA, 69, 338)
+I2 <- matrix(1, 69, 338)
+J2 <- matrix(NA, 69, 338)
 
 for (i in 2:69){ # looping over all weeks
   
@@ -83,19 +83,19 @@ prob[,1] <- 0
 
 dat1 <- prob
 
-dat2 <- matrix(NA, 69, 335)
+dat2 <- matrix(NA, 69, 338)
 
-for (i in 1:335) {
+for (i in 1:338) {
   dat2[,i] <- cumsum(dat1[,i])
 }
 
 colnames(dat2) <- invasion_week$admin2_code
 
-dat3 <- matrix(0, 69, 335)
+dat3 <- matrix(0, 69, 338)
 
 invasion_week_v <- as.vector(invasion_week$first_report)
 
-for (i in 1:335){
+for (i in 1:338){
   inf_wk <- invasion_week_v[i]
   dat3[inf_wk,i] <- 1
 }
@@ -149,7 +149,7 @@ datf <- merge(datf, dat3_m, by = c('week', 'city'))
 datf$observed_ix[datf$observed_ix == 1] <- -0.001 # assign value to invasion week so it is plotted just under plot
 datf$observed_ix[datf$observed_ix == 0] <- NA # make the 0's NA so they are not plotted
 
-saveRDS(datf, 'chik_validation_first_reports_335.RDS')
+saveRDS(datf, 'chik_validation_first_reports_338.RDS')
 
 ################# re-start R
 
@@ -315,11 +315,11 @@ library(tidyverse)
 library(cowplot)
 library(aweek)
 
-# 16-8-19
+# 16-3-20
 
 zika <- readRDS("zika_validation_first_reports_288.RDS") %>% mutate(disease = 'ZIKA') %>% arrange(observed_ix)
 
-chik <- readRDS("chik_validation_first_reports_335.RDS") %>% mutate(disease = 'CHIKV') %>% arrange(observed_ix)
+chik <- readRDS("chik_validation_first_reports_338.RDS") %>% mutate(disease = 'CHIKV') %>% arrange(observed_ix)
 
 zika$w_intro <- zika$week - 1 # start at week 0
 chik$w_intro <- chik$week - 1 # start at week 0
@@ -425,7 +425,7 @@ pchik <- ggplot(chikp,
 
 # ---- plot both diseases
 
-png(filename = "validation1_first_reported_cases.png",
+png(filename = "figure4.png",
     height = 800, width = 600*2, bg = "white", units = "px")
 plot_grid(pchik, pzika, nrow = 1, rel_widths = c(0.94, 1.12),
           labels = c("A", "B"),

@@ -19,20 +19,20 @@ plot_res <- function(burnIn, p) {
   
 # Plot histograms of posterior distribution of parameters from 3 starting points
 
-# log of beta
+# beta
 hist(chain_param1[-(1:burnIn),1], col = "darkturquoise", main = "beta - chain1", 
       xlab = "", ylab = "", cex.axis = 1.2, cex.main = 1.2)
 hist(chain_param2[-(1:burnIn),1], col = "deeppink", main = 'beta - chain2')
 hist(chain_param3[-(1:burnIn),1], col = "darkviolet", main = 'beta - chain3')
 
-# log of gamma
+# gamma
 hist(chain_param1[-(1:burnIn),2], col = "olivedrab4",
       main = "gamma - chain1", xlab = "", ylab = "",
       cex.axis = 1.2, cex.main = 1.2)
 hist(chain_param2[-(1:burnIn),2], col = "thistle3", main = "gamma - chain2")
 hist(chain_param3[-(1:burnIn),2], col = "peachpuff", main = "gamma - chain3")
 
-# log of nu
+# nu
 hist(chain_param1[-(1:burnIn),3], col = "tomato2",
       main = "nu - chain1", xlab = "", ylab = "",
       cex.axis = 1.2, cex.main = 1.2)
@@ -43,16 +43,16 @@ hist(chain_param3[-(1:burnIn),3], col = "darkseagreen4", main = "nu - chain3")
 par(mfrow=c(2,3))
 par(mar=c(2, 2, 2.5, 1))
 
-# log of epsilon
+# epsilon
 hist(chain_param1[-(1:burnIn),4], col = "grey37",
      main = "epsilon - chain1", xlab = "", ylab = "",
      cex.axis = 1.2, cex.main = 1.2)
 hist(chain_param2[-(1:burnIn),4], col = "darkred", main = "epsilon - chain2")
 hist(chain_param3[-(1:burnIn),4], col = "gold", main = "epsilon - chain3")
 
-# log of phi
+# phi
 hist(chain_param1[-(1:burnIn),5], col = "slategray2",
-     main = "epsilon - chain1", xlab = "", ylab = "",
+     main = "phi - chain1", xlab = "", ylab = "",
      cex.axis = 1.2, cex.main = 1.2)
 hist(chain_param2[-(1:burnIn),5], col = "tan2", main = "phi - chain2")
 hist(chain_param3[-(1:burnIn),5], col = "chocolate4", main = "phi - chain3")

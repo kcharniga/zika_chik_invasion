@@ -32,7 +32,7 @@ vals <- list(
 # run 3 chains in parallel
 start.time <- Sys.time()
 
-result <- mclapply( vals,   # note that mclapply is for Mac operating systems. Can also use lapply or Windows equivalent to mclapply to run parallel chains
+result <- mclapply( vals,   # note that mcapply is for Mac. Can also use lapply
                     FUN = run_metropolis_MCMC,
                     mc.cores = no_cores,
                     iterations = 100000,

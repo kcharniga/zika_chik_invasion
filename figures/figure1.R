@@ -76,7 +76,7 @@ map
 lat_lon <- readRDS("figures/data/lat_lon_complete.RDS")
 
 # load disease data
-chik <- readRDS('figures/data/chik_first_reported_cases_335.RDS') # invasion times start at week 1
+chik <- readRDS('figures/data/chik_first_reported_cases_338.RDS') # invasion times start at week 1
 chik <- rename(chik, admin2 = admin2_code)
 
 # Merge latitudes and longitudes with city infection week by admin 2 

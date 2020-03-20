@@ -3,7 +3,7 @@
 # Read in posterior distribution of parameters for best model
 # best model = infectivity model with mu set to 0
 # straight line distance (no elevation)
-# using first reported cases in each city (335 cities)
+# using first reported cases in each city (338 cities)
 params <- readRDS("figures/data/chik_mcmc_chains.RDS")
 params <- params$chain_param1 # first chain
 burnIn <- 100000
@@ -13,23 +13,23 @@ params <- params[-(1:burnIn),] # remove burnIn
 sampled_params <- params[sample(nrow(params), size = 1000, replace = FALSE), ]
 
 # invasion times
-invasion_week <- readRDS("figures/data/chik_first_reported_cases_335.RDS")
+invasion_week <- readRDS("figures/data/chik_first_reported_cases_338.RDS")
 invasion_week <- invasion_week[order(invasion_week$first_report), ]
 
 # load data
-#data <- readRDS("figures/data/matrices_chik_first_reported_cases_335.RDS")
+#data <- readRDS("figures/data/matrices_chik_first_reported_cases_338.RDS")
 
 # load data with bigger matrices - more time steps
-data <- readRDS("figures/data/chik_matrices_93_weeks.RDS")
+data <- readRDS("figures/data/chik_matrices_100_weeks.RDS")
 
 ###################################################
 # Epidemic simulations for 1000 parameter estimates
 ###################################################
 
 # initialize array, giving dimensions
-my_I2_array <- array(0, dim=c(93, 335, 1000))
+my_I2_array <- array(0, dim=c(100, 338, 1000))
 
-# this takes a few minutes (~10)
+# this takes a few minutes (~20)
 start.time <- Sys.time()
 
 for (i in 1:nrow(sampled_params)) { 
@@ -64,16 +64,16 @@ for (i in 1:nrow(sampled_params)) {
   kernel[is.na(kernel)] <- 0
   
   # define new matrices in order to simulate epidemic 
-  Ptj_better <- matrix(NA, 93, 335)
+  Ptj_better <- matrix(NA, 100, 338)
   
-  I2 <- matrix(0, 93, 335) 
+  I2 <- matrix(0, 100, 338) 
   I2[,1] <- 1 # start with one city invaded in week 1
   
   # make infectious matrix
   infectious <- I2 
-  first_row <- matrix(data = 0, nrow = 1, ncol = 335) # add row of zeros
+  first_row <- matrix(data = 0, nrow = 1, ncol = 338) # add row of zeros
   infectious <- rbind(first_row, infectious)
-  infectious <- infectious[1:93,]  # get rid of last row
+  infectious <- infectious[1:100,]  # get rid of last row
   
   J2 <- infectious
   J2[J2==1] <- NA
@@ -85,24 +85,24 @@ for (i in 1:nrow(sampled_params)) {
   H_sim <- matrix(0, nrow(H), ncol(H))
   H_sim[,1] <- H[,1]
   
-  for (k in 2:93){ # looping over all weeks
+  for (k in 2:100){ # looping over all weeks
     
     # calculate foi at time t
     foi = b*(H_sim^y*infectious)%*%kernel
     
     Ptj_better <- J2[k,]*(1-exp(-foi[k,])) * (1-I2[k,]) # remove part of likelihood where city escapes invasion
     
-    dog <- runif(335) < Ptj_better
+    dog <- runif(338) < Ptj_better
     # for all uninvaded cities, draw a random number r from uniform 0-1
     
     
-    I2[k:93, dog] <-  1      # city is invaded
+    I2[k:100, dog] <-  1      # city is invaded
     f <- which(dog %in% 1)
     for (j in f) {
       if (j <= nrow(invasion_week)) {
-        infectiousness <- H[invasion_week$first_report[j]:93,j]   # shift H 
+        infectiousness <- H[invasion_week$first_report[j]:100,j]   # shift H 
         index <- k:(k+length(infectiousness) - 1)
-        temp <- index <= 93
+        temp <- index <= 100
         H_sim[index[temp], j] <- infectiousness[temp]
       } 
       
@@ -110,9 +110,9 @@ for (i in 1:nrow(sampled_params)) {
     
     # update matrices with new invasion times
     infectious <- I2 
-    first_row <- matrix(data = 0, nrow = 1, ncol = 335) # add row of zeros
+    first_row <- matrix(data = 0, nrow = 1, ncol = 338) # add row of zeros
     infectious <- rbind(first_row, infectious)
-    infectious <- infectious[1:93,]  # get rid of last row
+    infectious <- infectious[1:100,]  # get rid of last row
     
     J2 <- infectious
     J2[J2==1] <- NA
@@ -294,7 +294,7 @@ zika_sim_avg <- apply(zika_my_I2_array, c(1, 2), mean, na.rm = TRUE) # compute a
 par(mfrow=c(1,2))
 par(mar=c(4,4,3,2))
 
-chik_weeks <- as.vector(0:92, mode = "integer") # start at week 0
+chik_weeks <- as.vector(0:99, mode = "integer") # start at week 0
 zika_weeks <- as.vector(0:49, mode = "integer") # start at week 0
 
 #CHIKV
