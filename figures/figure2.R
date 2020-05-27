@@ -103,7 +103,7 @@ par(mar=c(4,4,4,2))
 # CHIKV
 # plot invasion onset against straight line distance from Baranquilla for all cities with epidemic
 plot(x = chik_first_city_dist, y = chik_first_report_ordered,
-     xlab = "Great Circle Distance (km)", ylab = "Week of invasion", pch = 20, cex = 0.75, 
+     xlab = "Geographic Distance (km)", ylab = "Week of invasion", pch = 20, cex = 0.75, 
      cex.lab = 0.8, cex.axis = 0.8, xaxs="i", yaxs="i", xlim = c(0,1250), ylim = c(0,72))
 abline(lm(chik_first_report_ordered~chik_first_city_dist), col="black") # regression line (y~x) 
 mtext(expression(paste("Correlation: 0.37, p<0.0001")), line = 1, cex = 0.8)
@@ -115,7 +115,7 @@ par(mar=c(4,2,4,4))
 
 # plot invasion onset against straight line distance from San Andres for all cities with epidemic
 plot(x = zika_first_city_dist, y = zika_first_report_ordered,
-     xlab = "Great Circle Distance (km)", ylab = "", pch = 20, cex = 0.75, 
+     xlab = "Geographic Distance (km)", ylab = "", pch = 20, cex = 0.75, 
      cex.lab = 0.8, cex.axis = 0.8, xaxs="i", yaxs="i", xlim = c(0,1250), ylim = c(0,35))
 abline(lm(zika_first_report_ordered~zika_first_city_dist), col="black") # regression line (y~x) 
 mtext(expression(paste("Correlation: 0.24, p<0.0001")), line = 1, cex = 0.8)
