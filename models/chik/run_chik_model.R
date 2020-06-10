@@ -22,12 +22,12 @@ data1 <- readRDS("data/chik_matrices.RDS")
 # define start values and standard deviations of proposal distributions for 3 chains
 
 vals <- list(
-  data.frame(startvalue = c(0.2, 0.8, 0.05, 1.0, 0.2),
-             sd_proposal = c(0.3, 0.2, 0.4, 0.3, 0.4)),
-  data.frame(startvalue = c(0.6, 1.5, 0.65, 0.6, 1.2),
-             sd_proposal = c(0.3, 0.2, 0.4, 0.3, 0.4)),
-  data.frame(startvalue = c(0.05, 2.2, 1.2, 0.02, 0.65),
-             sd_proposal = c(0.3, 0.2, 0.4, 0.3, 0.4)))
+  data.frame(startvalue = c(4e-6, 0.8, 0.05, 1.0, 0.2),
+             sd_proposal = c(0.3, 0.2, 0.4, 0.2, 0.3)),
+  data.frame(startvalue = c(8e-4, 1.5, 0.65, 0.6, 1.2),
+             sd_proposal = c(0.3, 0.2, 0.4, 0.2, 0.3)),
+  data.frame(startvalue = c(2e-5, 2.2, 1.2, 0.02, 0.65),
+             sd_proposal = c(0.3, 0.2, 0.4, 0.2, 0.3)))
 
 # run 3 chains in parallel
 start.time <- Sys.time()

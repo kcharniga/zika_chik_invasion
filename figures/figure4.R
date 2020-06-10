@@ -26,10 +26,10 @@ H <- data$H
 
 # median parameter estimates from MCMC
 b <- 0.24
-g <- 1.69
+g <- 1.68
 v <- 0.65
 m <- 0
-e <- 0.84
+e <- 0.83
 y <- 0.35
 
 # Define kernel
@@ -178,11 +178,11 @@ J <- data$J
 d_cities <- data$d_cities
 H <- data$H
 
-b <- 1.11
+b <- 1.10
 g <- 1.74
 v <- 0.55
 m <- 0
-e <- 0.67
+e <- 0.68
 y <- 0.27
 
 # Define kernel
