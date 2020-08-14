@@ -17,7 +17,43 @@ source("functions/plot_res.R")
 burnIn = 100000
 
 # load data
-data1 <- readRDS("data/zika_matrices.RDS")
+zika_N <- as.matrix(read.csv("data/zika_N.txt", 
+                   sep='\t', 
+                   stringsAsFactors = FALSE,
+                   header = TRUE))
+
+zika_I <- as.matrix(read.csv("data/zika_I.txt", 
+                             sep='\t', 
+                             stringsAsFactors = FALSE,
+                             header = TRUE,
+                             check.names = FALSE))
+
+zika_infectious <- as.matrix(read.csv("data/zika_infectious.txt", 
+                                      sep='\t', 
+                                      stringsAsFactors = FALSE,
+                                      header = TRUE,
+                                      check.names = FALSE))
+
+zika_J <- as.matrix(read.csv("data/zika_J.txt", 
+                             sep='\t', 
+                             stringsAsFactors = FALSE,
+                             header = TRUE,
+                             check.names = FALSE))
+
+zika_d_cities <- as.matrix(read.csv("data/zika_d_cities.txt", 
+                                    sep='\t', 
+                                    stringsAsFactors = FALSE,
+                                    header = TRUE,
+                                    check.names = FALSE))
+
+zika_H <- as.matrix(read.csv("data/zika_H.txt", 
+                             sep='\t', 
+                             stringsAsFactors = FALSE,
+                             header = TRUE,
+                             check.names = FALSE))
+
+data1 <- list(N=zika_N, I=zika_I, infectious=zika_infectious, 
+              J=zika_J, d_cities=zika_d_cities, H=zika_H)
 
 # define start values and standard deviations of proposal distributions for 3 chains
 

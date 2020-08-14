@@ -17,7 +17,43 @@ source("functions/plot_res.R")
 burnIn = 100000
 
 # load data
-data1 <- readRDS("data/chik_matrices.RDS")
+chik_N <- as.matrix(read.csv("data/chik_N.txt", 
+                             sep='\t', 
+                             stringsAsFactors = FALSE,
+                             header = TRUE))
+
+chik_I <- as.matrix(read.csv("data/chik_I.txt", 
+                             sep='\t', 
+                             stringsAsFactors = FALSE,
+                             header = TRUE,
+                             check.names = FALSE))
+
+chik_infectious <- as.matrix(read.csv("data/chik_infectious.txt", 
+                                      sep='\t', 
+                                      stringsAsFactors = FALSE,
+                                      header = TRUE,
+                                      check.names = FALSE))
+
+chik_J <- as.matrix(read.csv("data/chik_J.txt", 
+                             sep='\t', 
+                             stringsAsFactors = FALSE,
+                             header = TRUE,
+                             check.names = FALSE))
+
+chik_d_cities <- as.matrix(read.csv("data/chik_d_cities.txt", 
+                                    sep='\t', 
+                                    stringsAsFactors = FALSE,
+                                    header = TRUE,
+                                    check.names = FALSE))
+
+chik_H <- as.matrix(read.csv("data/chik_H.txt", 
+                             sep='\t', 
+                             stringsAsFactors = FALSE,
+                             header = TRUE,
+                             check.names = FALSE))
+
+data1 <- list(N=chik_N, I=chik_I, infectious=chik_infectious, 
+              J=chik_J, d_cities=chik_d_cities, H=chik_H)
 
 # define start values and standard deviations of proposal distributions for 3 chains
 
@@ -32,7 +68,7 @@ vals <- list(
 # run 3 chains in parallel
 start.time <- Sys.time()
 
-result <- mclapply( vals,   # note that mcapply is for Mac. Can also use lapply
+result <- mclapply( vals,   # note that mclapply is for Mac. Can also use lapply
                     FUN = run_metropolis_MCMC,
                     mc.cores = no_cores,
                     iterations = 100000,

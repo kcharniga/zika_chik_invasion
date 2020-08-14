@@ -5,10 +5,24 @@ library(dplyr)
 ## CHIKV
 
 # Import lat/long of cities
-lat_lon <- readRDS("figures/data/lat_lon_complete.RDS")
+lat_lon <- read.csv("figures/data/lat_lon_complete.txt", 
+                    sep='\t', 
+                    stringsAsFactors = FALSE,
+                    header = TRUE)
+
+# format and pad admin2 with zeros
+lat_lon$admin2 <- sprintf("%05d", lat_lon$admin2)
+lat_lon$admin2 <- as.character(lat_lon$admin2)
 
 # city invasion times
-invasion_times <- readRDS('figures/data/chik_first_reported_cases_338.RDS') 
+invasion_times <- read.csv("figures/data/chik_first_reported_cases_338.txt", # invasion times start at week 1
+                 sep='\t', 
+                 stringsAsFactors = FALSE,
+                 header = TRUE)
+
+# format and pad admin2 with zeros
+invasion_times$admin2_code <- sprintf("%05d", invasion_times$admin2_code)
+invasion_times$admin2_code <- as.character(invasion_times$admin2_code) 
 invasion_times <- rename(invasion_times, admin2 = admin2_code)
 
 # subtract 1 from first reports to start at 0
@@ -18,7 +32,11 @@ invasion_times$first_report <- invasion_times$first_report - 1
 invasion_plot <- merge(lat_lon, invasion_times, by = "admin2", all.y = TRUE)
 
 # import matrix of distance between cities
-d_cities <- readRDS("figures/data/distance_matrix_km.RDS")
+d_cities <- as.matrix(read.csv("figures/data/distance_matrix_km.txt", 
+                                    sep='\t', 
+                                    stringsAsFactors = FALSE,
+                                    header = TRUE,
+                                    check.names = FALSE))
 
 # Re-order rows and columns in distance matrix to match rows in invasion times df
 row.order <- rownames(invasion_times)
@@ -45,10 +63,25 @@ library(dplyr)
 ## ZIKV
 
 # Import lat/long of cities
-lat_lon <- readRDS("figures/data/lat_lon_complete.RDS")
+lat_lon <- read.csv("figures/data/lat_lon_complete.txt", 
+                    sep='\t', 
+                    stringsAsFactors = FALSE,
+                    header = TRUE)
+
+# format and pad admin2 with zeros
+lat_lon$admin2 <- sprintf("%05d", lat_lon$admin2)
+lat_lon$admin2 <- as.character(lat_lon$admin2)
 
 # city invasion times
-invasion_times <- readRDS('figures/data/zika_first_reported_cases_288.RDS') 
+invasion_times <- read.csv("figures/data/zika_first_reported_cases_288.txt", # weeks start at 1
+                 sep='\t', 
+                 stringsAsFactors = FALSE,
+                 header = TRUE)
+
+# format and pad admin2 with zeros
+invasion_times$admin2_code <- sprintf("%05d", invasion_times$admin2_code)
+invasion_times$admin2_code <- as.character(invasion_times$admin2_code) 
+
 invasion_times <- rename(invasion_times, admin2 = admin2_code)
 
 # subtract 1 from first reports to start at 0
@@ -58,7 +91,11 @@ invasion_times$first_report <- invasion_times$first_report - 1
 invasion_plot <- merge(lat_lon, invasion_times, by = "admin2", all.y = TRUE)
 
 # import matrix of distance between cities
-d_cities <- readRDS("figures/data/distance_matrix_km.RDS")
+d_cities <- as.matrix(read.csv("figures/data/distance_matrix_km.txt", 
+                                    sep='\t', 
+                                    stringsAsFactors = FALSE,
+                                    header = TRUE,
+                                    check.names = FALSE))
 
 # Re-order rows and columns in distance matrix to match rows in invasion times df
 row.order <- rownames(invasion_times)

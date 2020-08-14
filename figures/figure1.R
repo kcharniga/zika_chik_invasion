@@ -1,8 +1,6 @@
 ##### Figure 1 Mapping invasion times 
 # all cities with epidemics excluding San Andres and Providencia
 
-# updated to fix CHIKV dates reported week 1 of 2014
-
 ## CHIKV
 
 # Load these packages
@@ -68,15 +66,30 @@ map <- ggplot() +
   #remove margins
   theme(plot.margin=unit(c(0,0,0,0),"mm"))  
 
-map
+#map
 
 ############# DATA
 
 # Import lat/long of cities
-lat_lon <- readRDS("figures/data/lat_lon_complete.RDS")
+lat_lon <- read.csv("figures/data/lat_lon_complete.txt", 
+                         sep='\t', 
+                         stringsAsFactors = FALSE,
+                         header = TRUE)
+
+# format and pad admin2 with zeros
+lat_lon$admin2 <- sprintf("%05d", lat_lon$admin2)
+lat_lon$admin2 <- as.character(lat_lon$admin2)
 
 # load disease data
-chik <- readRDS('figures/data/chik_first_reported_cases_338.RDS') # invasion times start at week 1
+chik <- read.csv("figures/data/chik_first_reported_cases_338.txt", # invasion times start at week 1
+                      sep='\t', 
+                      stringsAsFactors = FALSE,
+                      header = TRUE)
+
+# format and pad admin2 with zeros
+chik$admin2_code <- sprintf("%05d", chik$admin2_code)
+chik$admin2_code <- as.character(chik$admin2_code) 
+
 chik <- rename(chik, admin2 = admin2_code)
 
 # Merge latitudes and longitudes with city infection week by admin 2 
@@ -123,7 +136,7 @@ map1 <- map +
   theme(legend.text = element_text(size = 16)) +
   theme(legend.key.size = unit(1.5, 'lines'))
 
-map1
+#map1
 
 map2 <- map +
   geom_blank(data = data_1, aes(x = admin2_longitude, y = admin2_latitude, 
@@ -146,7 +159,7 @@ map2 <- map +
   theme(legend.text = element_text(size = 16)) +
   theme(legend.key.size = unit(1.5, 'lines'))
 
-map2
+#map2
 
 map3 <- map +
   geom_blank(data = data_1, aes(x = admin2_longitude, y = admin2_latitude, 
@@ -169,7 +182,7 @@ map3 <- map +
   theme(legend.text = element_text(size = 16)) +
   theme(legend.key.size = unit(1.5, 'lines'))
 
-map3
+#map3
 
 map4 <- map +
   geom_blank(data = data_1, aes(x = admin2_longitude, y = admin2_latitude, 
@@ -192,7 +205,7 @@ map4 <- map +
   theme(legend.text = element_text(size = 16)) +
   theme(legend.key.size = unit(1.5, 'lines'))
 
-map4
+#map4
 
 map5 <- map +
   geom_blank(data = data_1, aes(x = admin2_longitude, y = admin2_latitude, 
@@ -215,7 +228,7 @@ map5 <- map +
   theme(legend.text = element_text(size = 16)) +
   theme(legend.key.size = unit(1.5, 'lines'))
 
-map5
+#map5
 
 map6 <- map +
   geom_blank(data = data_1, aes(x = admin2_longitude, y = admin2_latitude, 
@@ -239,7 +252,7 @@ map6 <- map +
   theme(legend.key.size = unit(1.5, 'lines'))
 
 
-map6
+#map6
 
 chik_map <- ggarrange(map1, map2, map3, map4, map5, map6, ncol = 3, nrow=2, legend="none", 
                       labels = c("Weeks\n   0-11", "Weeks\n  12-23", "Weeks\n 24-35", "Weeks\n 36-47", "Weeks\n 48-59", "Weeks\n 60-71"),
@@ -315,15 +328,30 @@ map <- ggplot() +
   #remove margins
   theme(plot.margin=unit(c(0,0,0,0),"mm"))  
 
-map
+#map
 
 ############# DATA
 
 # Import lat/long of cities
-lat_lon <- readRDS("figures/data/lat_lon_complete.RDS")
+lat_lon <- read.csv("figures/data/lat_lon_complete.txt", 
+                    sep='\t', 
+                    stringsAsFactors = FALSE,
+                    header = TRUE)
+
+# format and pad admin2 with zeros
+lat_lon$admin2 <- sprintf("%05d", lat_lon$admin2)
+lat_lon$admin2 <- as.character(lat_lon$admin2)
 
 # load disease data
-zika <- readRDS('figures/data/zika_first_reported_cases_288.RDS') # weeks start at 1
+zika <- read.csv("figures/data/zika_first_reported_cases_288.txt", # weeks start at 1
+                      sep='\t', 
+                      stringsAsFactors = FALSE,
+                      header = TRUE)
+
+# format and pad admin2 with zeros
+zika$admin2_code <- sprintf("%05d", zika$admin2_code)
+zika$admin2_code <- as.character(zika$admin2_code) 
+
 zika <- rename(zika, admin2 = admin2_code)
 
 # Merge latitudes and longitudes with city infection week by admin 2 
@@ -370,7 +398,7 @@ map1 <- map +
   theme(legend.text = element_text(size = 16)) +
   theme(legend.key.size = unit(1.5, 'lines'))
 
-map1
+#map1
 
 map2 <- map +
   geom_blank(data = data_1, aes(x = admin2_longitude, y = admin2_latitude, 
@@ -393,7 +421,7 @@ map2 <- map +
   theme(legend.text = element_text(size = 16)) +
   theme(legend.key.size = unit(1.5, 'lines'))
 
-map2
+#map2
 
 map3 <- map +
   geom_blank(data = data_1, aes(x = admin2_longitude, y = admin2_latitude, 
@@ -416,7 +444,7 @@ map3 <- map +
   theme(legend.text = element_text(size = 16)) +
   theme(legend.key.size = unit(1.5, 'lines'))
 
-map3
+#map3
 
 map4 <- map +
   geom_blank(data = data_1, aes(x = admin2_longitude, y = admin2_latitude, 
@@ -439,7 +467,7 @@ map4 <- map +
   theme(legend.text = element_text(size = 16)) +
   theme(legend.key.size = unit(1.5, 'lines'))
 
-map4
+#map4
 
 map5 <- map +
   geom_blank(data = data_1, aes(x = admin2_longitude, y = admin2_latitude, 
@@ -462,7 +490,7 @@ map5 <- map +
   theme(legend.text = element_text(size = 16)) +
   theme(legend.key.size = unit(1.5, 'lines'))
 
-map5
+#map5
 
 map6 <- map +
   geom_blank(data = data_1, aes(x = admin2_longitude, y = admin2_latitude, 
@@ -486,7 +514,7 @@ map6 <- map +
   theme(legend.key.size = unit(1.5, 'lines'))
 
 
-map6
+#map6
 
 zika_map <- ggarrange(map1, map2, map3, map4, map5, map6, ncol = 3, nrow=2, common.legend = TRUE, legend="bottom",
                       labels = c("Weeks\n   0-5", "Weeks\n  6-11", "Weeks\n 12-17", "Weeks\n 18-23", "Weeks\n 24-29", "Weeks\n 30-35"),

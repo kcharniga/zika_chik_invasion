@@ -2,10 +2,13 @@
 
 # Read in posterior distribution of parameters for best model
 # best model = infectivity model with mu set to 0
-# straight line distance (no elevation)
+# straight line distance 
 # using first reported cases in each city (338 cities)
-params <- readRDS("figures/data/chik_mcmc_chains.RDS")
-params <- params$chain_param1 # first chain
+params <- as.matrix(read.csv("figures/data/chik_mcmc_chain1.txt", # first chain
+                                  sep='\t', 
+                                  stringsAsFactors = FALSE,
+                                  header = TRUE,
+                                  check.names = FALSE)) 
 burnIn <- 100000
 params <- params[-(1:burnIn),] # remove burnIn
 
@@ -13,14 +16,57 @@ params <- params[-(1:burnIn),] # remove burnIn
 sampled_params <- params[sample(nrow(params), size = 1000, replace = FALSE), ]
 
 # invasion times
-invasion_week <- readRDS("figures/data/chik_first_reported_cases_338.RDS")
+invasion_week <- read.csv("figures/data/chik_first_reported_cases_338.txt", # invasion times start at week 1
+                          sep='\t', 
+                          stringsAsFactors = FALSE,
+                          header = TRUE)
+
+# format and pad admin2 with zeros
+invasion_week$admin2_code <- sprintf("%05d", invasion_week$admin2_code)
+invasion_week$admin2_code <- as.character(invasion_week$admin2_code) 
+
 invasion_week <- invasion_week[order(invasion_week$first_report), ]
 
-# load data
-#data <- readRDS("figures/data/matrices_chik_first_reported_cases_338.RDS")
-
 # load data with bigger matrices - more time steps
-data <- readRDS("figures/data/chik_matrices_100_weeks.RDS")
+I <- as.matrix(read.csv("figures/data/chik_I_100.txt", 
+                             sep='\t', 
+                             stringsAsFactors = FALSE,
+                             header = TRUE,
+                             check.names = FALSE))
+
+infectious <- as.matrix(read.csv("figures/data/chik_infectious_100.txt", 
+                                      sep='\t', 
+                                      stringsAsFactors = FALSE,
+                                      header = TRUE,
+                                      check.names = FALSE))
+
+J <- as.matrix(read.csv("figures/data/chik_J_100.txt", 
+                             sep='\t', 
+                             stringsAsFactors = FALSE,
+                             header = TRUE,
+                             check.names = FALSE))
+
+H <- as.matrix(read.csv("figures/data/chik_H_100.txt", 
+                        sep='\t', 
+                        stringsAsFactors = FALSE,
+                        header = TRUE,
+                        check.names = FALSE))
+
+# these matrices are the same size (no time component)
+N <- as.matrix(read.csv("figures/data/chik_N.txt", 
+                        sep='\t', 
+                        stringsAsFactors = FALSE,
+                        header = TRUE))
+
+d_cities <- as.matrix(read.csv("figures/data/chik_d_cities.txt", 
+                                    sep='\t', 
+                                    stringsAsFactors = FALSE,
+                                    header = TRUE,
+                                    check.names = FALSE))
+
+# combine into list
+data <- list(N=N, I=I, infectious=infectious, 
+             J=J, d_cities=d_cities, H=H)
 
 ###################################################
 # Epidemic simulations for 1000 parameter estimates
@@ -138,25 +184,72 @@ saveRDS(my_I2_array, "chik_my_I2_arrayfirstreports.RDS")
 
 # Read in posterior distribution of parameters for best model
 # best model = infectivity model with mu set to 0
-# straight line distance (no elevation)
+# straight line distance 
 # using first reported cases in each city (288 cities)
-params <- readRDS("figures/data/zika_mcmc_chains.RDS")
-params <- params$chain_param1
+params <- as.matrix(read.csv("figures/data/zika_mcmc_chain1.txt", 
+                                  sep='\t', 
+                                  stringsAsFactors = FALSE,
+                                  header = TRUE,
+                                  check.names = FALSE))
+
 burnIn <- 100000
 params <- params[-(1:burnIn),] # remove burnIn
 
 # invasion times
-invasion_week <- readRDS("figures/data/zika_first_reported_cases_288.RDS")
+invasion_week <- read.csv("figures/data/zika_first_reported_cases_288.txt", # weeks start at 1
+                          sep='\t', 
+                          stringsAsFactors = FALSE,
+                          header = TRUE)
+
+# format and pad admin2 with zeros
+invasion_week$admin2_code <- sprintf("%05d", invasion_week$admin2_code)
+invasion_week$admin2_code <- as.character(invasion_week$admin2_code) 
+
 invasion_week <- invasion_week[order(invasion_week$first_report), ]
 
 # # randomly sample 1000 parameter sets from posterior distribution
 sampled_params <- params[sample(nrow(params), size = 1000, replace = FALSE), ]
 
-# load data
-#data <- readRDS("figures/data/matrices_zika_first_reported_cases_288.RDS")
-
 # load data with bigger matrices to run for more simulations
-data <- readRDS("figures/data/zika_matrices_50_weeks.RDS")
+I <- as.matrix(read.csv("figures/data/zika_I_50.txt", 
+                             sep='\t', 
+                             stringsAsFactors = FALSE,
+                             header = TRUE,
+                             check.names = FALSE))
+
+infectious <- as.matrix(read.csv("figures/data/zika_infectious_50.txt", 
+                                      sep='\t', 
+                                      stringsAsFactors = FALSE,
+                                      header = TRUE,
+                                      check.names = FALSE))
+
+J <- as.matrix(read.csv("figures/data/zika_J_50.txt", 
+                             sep='\t', 
+                             stringsAsFactors = FALSE,
+                             header = TRUE,
+                             check.names = FALSE))
+
+H <- as.matrix(read.csv("figures/data/zika_H_50.txt", 
+                        sep='\t', 
+                        stringsAsFactors = FALSE,
+                        header = TRUE,
+                        check.names = FALSE))
+
+# these matrices are the same size (no time component)
+N <- as.matrix(read.csv("figures/data/zika_N.txt", 
+                        sep='\t', 
+                        stringsAsFactors = FALSE,
+                        header = TRUE))
+
+d_cities <- as.matrix(read.csv("figures/data/zika_d_cities.txt", 
+                                    sep='\t', 
+                                    stringsAsFactors = FALSE,
+                                    header = TRUE,
+                                    check.names = FALSE))
+
+# combine into list
+data <- list(N=N, I=I, infectious=infectious, 
+             J=J, d_cities=d_cities, H=H)
 
 ###################################################
 # Epidemic simulations for 1000 parameter estimates
@@ -165,7 +258,7 @@ data <- readRDS("figures/data/zika_matrices_50_weeks.RDS")
 # initialize array, giving dimensions
 my_I2_array <- array(0, dim=c(50, 288, 1000))
 
-# takes about 2 minutes
+# takes about 4 minutes
 start.time <- Sys.time()
 
 for (i in 1:nrow(sampled_params)) { 
@@ -299,7 +392,7 @@ zika_weeks <- as.vector(0:49, mode = "integer") # start at week 0
 
 #CHIKV
 
-plot(x = chik_weeks, y = rowSums(chik_I), main = "", xlab = "Weeks", ylab = "Number of Invaded Cities", type = "l", col = "red", 
+plot(x = chik_weeks, y = rowSums(chik_I), main = "", xlab = "Weeks", ylab = "Number of invaded cities", type = "l", col = "red", 
      lwd = 1)
 for (h in 1:1000) { # number of param sets
   lines(x = chik_weeks, y = rowSums(chik_my_I2_array[,,h]), col = "grey76")

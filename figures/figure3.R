@@ -1,11 +1,17 @@
-##### Heatmaps
-
 ## CHIKV
 
 # load disease and population data
-chik <- readRDS("figures/data/chik_admin1_series.RDS")
+chik <- read.csv("figures/data/chik_admin1_series.txt", 
+                 sep='\t', 
+                 stringsAsFactors = FALSE,
+                 header = TRUE,
+                 check.names = FALSE)
 
-depts <- readRDS("figures/data/admin1_names.RDS")
+depts <- read.csv("figures/data/admin1_names.txt", 
+                  sep='\t', 
+                  stringsAsFactors = FALSE,
+                  header = TRUE,
+                  check.names = FALSE)
 
 #Creating a column with correct (accented) department names
 
@@ -93,17 +99,26 @@ library(reshape2)
 # re-shape data for ggplot
 hm2 <- melt(hm)
 
+hm2$value[hm2$value == 0] <- NA # assign weeks with 0 cases to NA. These will be white in plot
+
 p <- ggplot(hm2, aes(Var2, Var1)) +
-  geom_tile(aes(fill = value), colour = "white") +
+  geom_tile(aes(fill = value), colour = "grey30") +
   #scale_fill_gradient("Cases", low = "white", high = "steelblue") +
   scale_fill_viridis_c("Cases", option = "viridis", trans = "log", 
-                       breaks = c(1, 10, 60, 500, 6800),labels = c(1, 10, 60, 500, 6800)) +
+                       breaks = c(1, 10, 70, 600, 6800),labels = c(1, 10, 70, 600, 6800),
+                       na.value = "white") +
   theme_bw() +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
-  xlab("Week") +
+  theme(panel.border = element_blank()) +
+  xlab("Weeks") +
   ylab(NULL) +
-  theme(axis.text=element_text(size=16), axis.title.x=element_text(size=18)) +
-  theme(legend.title=element_text(size=15), legend.text=element_text(size=14))
+  theme(axis.text=element_text(size=16), axis.title.x=element_text(size=18),
+        axis.text.y=element_text(color = "black"),
+        axis.ticks.y = element_blank()) +
+  theme(legend.title=element_text(size=15), legend.text=element_text(size=14)) +
+  scale_x_continuous(expand = c(0, 0), limits = c(0, 110)) 
+#theme(axis.text.y = element_text(color = "black"),
+#axis.ticks = element_line(color = "black"))
 
 p      
 
@@ -116,10 +131,17 @@ saveRDS(p, "chik_heatmap_for_manuscript.RDS")
 ## ZIKV
 
 #Load disease and population data
+zika <- read.csv("figures/data/zika_admin1_series.txt", 
+                 sep='\t', 
+                 stringsAsFactors = FALSE,
+                 header = TRUE,
+                 check.names = FALSE)
 
-zika <- readRDS("figures/data/zika_admin1_series.RDS")
-
-depts <- readRDS("figures/data/admin1_names.RDS")
+depts <- read.csv("figures/data/admin1_names.txt", 
+                  sep='\t', 
+                  stringsAsFactors = FALSE,
+                  header = TRUE,
+                  check.names = FALSE)
 
 #Creating a column with correct (accented) department names
 
@@ -191,18 +213,25 @@ library(reshape2)
 # re-shape data for ggplot
 hm2 <- melt(hm)
 
+hm2$value[hm2$value == 0] <- NA
+
 p <- ggplot(hm2, aes(Var2, Var1)) +
-  geom_tile(aes(fill = value), colour = "white") +
+  geom_tile(aes(fill = value), colour = "grey30") +
   #scale_fill_gradient("Cases", low = "white", high = "steelblue") +
   scale_fill_viridis_c("Cases", option = "viridis", trans = "log",
-                       breaks=c(1, 7, 50, 300, 1500),labels=c(1, 7, 50, 300, 1500)) +
+                       breaks=c(1, 7, 50, 300, 1500),labels=c(1, 7, 50, 300, 1500),
+                       na.value = "white") +
   #scale_fill_viridis_c("log(cases)", option = "viridis") +
   theme_bw() +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
-  xlab("Week") +
+  theme(panel.border = element_blank()) +
+  xlab("Weeks") +
   ylab(NULL) +
-  theme(axis.text=element_text(size=16), axis.title.x=element_text(size=18)) +
-  theme(legend.title=element_text(size=15), legend.text=element_text(size=14)) 
+  theme(axis.text=element_text(size=16), axis.title.x=element_text(size=18),
+        axis.text.y=element_text(color = "black"),
+        axis.ticks.y = element_blank()) +
+  theme(legend.title=element_text(size=15), legend.text=element_text(size=14)) +
+  scale_x_continuous(expand = c(0, 0), limits = c(0, 97))
 
 p
 
@@ -221,5 +250,6 @@ plot_grid(chik_hm, zika_hm,
           label_size = 20,
           ncol = 1, nrow = 2)
 
-# save as pdf, resolution 1000 x 1200
+# save as pdf, resolution ~1000 x 1200 (14x17)
+
 

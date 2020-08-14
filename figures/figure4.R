@@ -1,28 +1,63 @@
 ##### Figure 4 Probability distribution of first reported cases 
 
-# 16-3-20
+# 12-8-20
 
 ## CHIKV
 
 
 # invasion times
-invasion_week <- readRDS("figures/data/chik_first_reported_cases_338.RDS")
+invasion_week <- read.csv("figures/data/chik_first_reported_cases_338.txt", # invasion times start at week 1
+                          sep='\t', 
+                          stringsAsFactors = FALSE,
+                          header = TRUE)
+
+# format and pad admin2 with zeros
+invasion_week$admin2_code <- sprintf("%05d", invasion_week$admin2_code)
+invasion_week$admin2_code <- as.character(invasion_week$admin2_code) 
+
 invasion_week <- invasion_week[order(invasion_week$first_report), ]
 
 # load data
-data <- readRDS("figures/data/chik_matrices.RDS")
+N <- as.matrix(read.csv("figures/data/chik_N.txt", 
+                        sep='\t', 
+                        stringsAsFactors = FALSE,
+                        header = TRUE))
+
+I <- as.matrix(read.csv("figures/data/chik_I.txt", 
+                        sep='\t', 
+                        stringsAsFactors = FALSE,
+                        header = TRUE,
+                        check.names = FALSE))
+
+infectious <- as.matrix(read.csv("figures/data/chik_infectious.txt", 
+                                 sep='\t', 
+                                 stringsAsFactors = FALSE,
+                                 header = TRUE,
+                                 check.names = FALSE))
+
+J <- as.matrix(read.csv("figures/data/chik_J.txt", 
+                        sep='\t', 
+                        stringsAsFactors = FALSE,
+                        header = TRUE,
+                        check.names = FALSE))
+
+d_cities <- as.matrix(read.csv("figures/data/chik_d_cities.txt", 
+                               sep='\t', 
+                               stringsAsFactors = FALSE,
+                               header = TRUE,
+                               check.names = FALSE))
+
+H <- as.matrix(read.csv("figures/data/chik_H.txt", 
+                        sep='\t', 
+                        stringsAsFactors = FALSE,
+                        header = TRUE,
+                        check.names = FALSE))
+
 
 ################################################
 # prepare data to plot probability 
 # distributions for central parameter estimates
 ################################################
-
-N <- data$N
-I <- data$I
-infectious <- data$infectious
-J <- data$J
-d_cities <- data$d_cities
-H <- data$H
 
 # median parameter estimates from MCMC
 b <- 0.24
@@ -157,26 +192,57 @@ saveRDS(datf, 'chik_validation_first_reports_338.RDS')
 
 
 # invasion times
-invasion_week <- readRDS("figures/data/zika_first_reported_cases_288.RDS")
+invasion_week <- read.csv("figures/data/zika_first_reported_cases_288.txt", # weeks start at 1
+                          sep='\t', 
+                          stringsAsFactors = FALSE,
+                          header = TRUE)
+
+# format and pad admin2 with zeros
+invasion_week$admin2_code <- sprintf("%05d", invasion_week$admin2_code)
+invasion_week$admin2_code <- as.character(invasion_week$admin2_code) 
+
 invasion_week <- invasion_week[order(invasion_week$first_report), ]
 
-# # randomly sample 1000 parameter sets from posterior distribution
-sampled_params <- params[sample(nrow(params), size = 1000, replace = FALSE), ]
-
 # load data
-data <- readRDS("figures/data/zika_matrices.RDS")
+N <- as.matrix(read.csv("figures/data/zika_N.txt", 
+                        sep='\t', 
+                        stringsAsFactors = FALSE,
+                        header = TRUE))
+
+I <- as.matrix(read.csv("figures/data/zika_I.txt", 
+                        sep='\t', 
+                        stringsAsFactors = FALSE,
+                        header = TRUE,
+                        check.names = FALSE))
+
+infectious <- as.matrix(read.csv("figures/data/zika_infectious.txt", 
+                                 sep='\t', 
+                                 stringsAsFactors = FALSE,
+                                 header = TRUE,
+                                 check.names = FALSE))
+
+J <- as.matrix(read.csv("figures/data/zika_J.txt", 
+                        sep='\t', 
+                        stringsAsFactors = FALSE,
+                        header = TRUE,
+                        check.names = FALSE))
+
+d_cities <- as.matrix(read.csv("figures/data/zika_d_cities.txt", 
+                               sep='\t', 
+                               stringsAsFactors = FALSE,
+                               header = TRUE,
+                               check.names = FALSE))
+
+H <- as.matrix(read.csv("figures/data/zika_H.txt", 
+                        sep='\t', 
+                        stringsAsFactors = FALSE,
+                        header = TRUE,
+                        check.names = FALSE))
 
 ################################################
 # prepare data to plot probability 
 # distributions for central parameter estimates
 ################################################
-
-N <- data$N
-I <- data$I
-infectious <- data$infectious
-J <- data$J
-d_cities <- data$d_cities
-H <- data$H
 
 b <- 1.10
 g <- 1.74
@@ -379,7 +445,8 @@ pzika <- ggplot(zikap,
   geom_point(data = daft_ix_zika, aes(x=date, y=reorder(city, - prob_ix100)), colour = 'black', size = 0.4) +
   scale_fill_viridis_c(option = "viridis", direction = -1,  trans = "log", 
                        breaks = c(1, 10, 55), labels = c(0.01, 0.10, 0.55)) +
-  scale_x_date(date_breaks = "2 months", date_labels =  "%b %Y") +
+  scale_x_date(date_breaks = "2 months", date_labels =  "%b %Y",
+               expand = c(0,0)) +
   # scale_fill_viridis_c(option = "viridis", direction = -1,  limits = c(0,50)) +
   theme(axis.text.y=element_blank(),
         axis.ticks.y = element_blank()) +
@@ -389,7 +456,9 @@ pzika <- ggplot(zikap,
     strip.background = element_blank(),
     strip.text.x = element_blank()
   ) +
-  theme(plot.margin = unit(c(1.2, 0, 0, 0), "cm"))
+  theme(plot.margin = unit(c(1.2, 0, 0, 0), "cm")) +
+  labs(x = "Date", y = "City")
+  
 
 
 
@@ -410,7 +479,8 @@ pchik <- ggplot(chikp,
   geom_point(data = daft_ix_chik, aes(x=date, y=reorder(city, - prob_ix100)), colour = 'black', size = 0.4) +
   scale_fill_viridis_c(option = "viridis", direction = -1,  trans = "log",
                        begin = 0, end = 1) +
-  scale_x_date(date_breaks = "4 months", date_labels =  "%b %Y") +
+  scale_x_date(date_breaks = "3 months", date_labels =  "%b %Y",
+               expand = c(0,0)) +
   # scale_fill_viridis_c(option = "viridis", direction = -1,  limits = c(0,50)) +
   theme(axis.text.y=element_blank(),
         axis.ticks.y = element_blank()) +
@@ -420,7 +490,8 @@ pchik <- ggplot(chikp,
     strip.background = element_blank(),
     strip.text.x = element_blank()
   ) +
-  theme(plot.margin = unit(c(1.2, 0, 0, 0), "cm"))
+  theme(plot.margin = unit(c(1.2, 0, 0, 0), "cm")) +
+  labs(x = "Date", y = "City")
 
 
 # ---- plot both diseases

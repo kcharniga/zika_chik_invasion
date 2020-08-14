@@ -19,7 +19,10 @@ library(gganimate)
 library(transformr)
 
 # load disease data
-zika <- readRDS("animations/data/zika_monthly_inc_for_animation.RDS")
+zika <- read.csv("animations/data/zika_monthly_inc_for_animation.txt", 
+                 sep='\t', 
+                 stringsAsFactors = FALSE,
+                 header = TRUE)
   
 new_df <- zika
 

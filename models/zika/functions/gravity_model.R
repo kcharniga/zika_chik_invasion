@@ -9,13 +9,6 @@
 
 likelihood <- function(data1, param, kernel,k,num_kernel,inv_dist) {
   
-  N <- data1$N
-  I <- data1$I
-  infectious <- data1$infectious
-  J <- data1$J
-  d_cities <- data1$d_cities
-  H <- data1$H
-  
   # parameters sampled on log scale because they are positive and can vary on large scale
   # b (beta) is transmission between cities
   # g (gamma) estimates spatial effect in transmission
@@ -33,17 +26,17 @@ likelihood <- function(data1, param, kernel,k,num_kernel,inv_dist) {
   # Define kernel
   if (k!=1){
     if (k == 0){
-      inv_dist <- (d_cities)^g 
-      num_kernel <-  ((N^m)%*%t(N^v))
+      inv_dist <- (data1$d_cities)^g 
+      num_kernel <-  ((data1$N^m)%*%t(data1$N^v))
     }
     if (k == 2){
-      inv_dist <- (d_cities)^g 
+      inv_dist <- (data1$d_cities)^g 
     }else{
-      num_kernel <-  ((N^m)%*%t(N^v))
+      num_kernel <-  ((data1$N^m)%*%t(data1$N^v))
     }
     kernel <- num_kernel/inv_dist
-    w <- ( colSums(matrix(N^v,length(N),length(N))/inv_dist ,na.rm = TRUE) )^e
-    W <- matrix(1/w, nrow = length(N), ncol = length(N), byrow = TRUE)
+    w <- ( colSums(matrix(data1$N^v,length(data1$N),length(data1$N))/inv_dist ,na.rm = TRUE) )^e
+    W <- matrix(1/w, nrow = length(data1$N), ncol = length(data1$N), byrow = TRUE)
     kernel <- kernel * W
   }
   
@@ -51,9 +44,9 @@ likelihood <- function(data1, param, kernel,k,num_kernel,inv_dist) {
   kernel[is.na(kernel)] <- 0
   
   # Model equation
-  foi = b*(H^y*infectious)%*%kernel
+  foi = b*(data1$H^y*data1$infectious)%*%kernel
 
-  log_Ptj <- J * (I*log(1-exp(-foi)) -foi * (1-I))   
+  log_Ptj <- data1$J * (data1$I*log(1-exp(-foi)) -foi * (1-data1$I))   
   
   # Sum log likelihoods of Ptj over all susceptible cities to get conditional log likelihood
   LL <- sum(log_Ptj, na.rm = TRUE)
