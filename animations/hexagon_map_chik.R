@@ -65,7 +65,7 @@ p <- ggplot(hex_map_data_month, aes(long, lat)) +
                color = "white") +
   geom_text(aes(label = dep_short, x = x, y = y), color = "white", size = 4) + # transition_states(hex_map_data_month$month_no, transition_length = 1, states = hex_map_data_month$month_no) 
   transition_time(hex_map_data_month$month_no) + # states is name of column holding state levels in data
-  labs(title = "Chikungunya incidence per 100,000 population in 
+  labs(title = "Chikungunya incidence per 100,000 in 
        {hex_map_data_month$month_name[as.integer(frame_time)]} {hex_map_data_month$year[as.integer(frame_time)]}",
        subtitle = "Colombia") +
   scale_fill_viridis_c(trans = "log",
