@@ -6,75 +6,61 @@
 # Load these packages
 library(raster)
 library(sp)
-library(rgdal)     # R wrapper around GDAL/OGR
 library(ggplot2)   # for general plotting
-library(ggmap)    # for fortifying shapefiles
 library(ggpubr)    # for arranging combined ggplots
 library(dplyr)
+library(rnaturalearth)
 
-# Reading areal polygon data into R
+# Reading shapefile data into R
+spdf_world <- ne_countries()
 
-par(mar=c(0,0,0,0))
+# crop the extent
+e <- extent(-80,-66,-6,12)
 
-# Colombia shapefiles
-adm1data <- getData('GADM', country = 'COL', level = 1)
-adm0data <- getData('GADM', country = 'COL', level = 0)
+america <- crop(spdf_world, e)
 
-# Bordering countries
-adm0data_VEN <- getData('GADM', country = 'VEN', level = 0)
-adm0data_BRA <- getData('GADM', country = 'BRA', level = 0)
-adm0data_PER <- getData('GADM', country = 'PER', level = 0)
-adm0data_ECU <- getData('GADM', country = 'ECU', level = 0)
-adm0data_PAN <- getData('GADM', country = 'PAN', level = 0)
+plot(america)
 
-# Prepare shapefile for use in ggplot
-COL_admin0 <- fortify(adm0data)
-COL_admin1 <- fortify(adm1data)
-
-VEN <- fortify(adm0data_VEN)
-BRA <- fortify(adm0data_BRA)
-PER <- fortify(adm0data_PER)
-ECU <- fortify(adm0data_ECU)
-PAN <- fortify(adm0data_PAN)
+admin0 <- fortify(america)
+admin1 <- filter(admin0, group == 22.1)
+admin2 <- filter(admin0, group == 35.1) # Colombia
+admin3 <- filter(admin0, group == 46.1)
+admin4 <- filter(admin0, group == 123.1)
+admin5 <- filter(admin0, group == 124.1)
+admin6 <- filter(admin0, group == 170.1)
 
 # base map
 
 map <- ggplot() +
-  geom_polygon(data = COL_admin0, aes(x = long, y = lat, group = group),
-               color = "black", fill = 'gray', size = 0.25) + 
-  geom_polygon(data = VEN, aes(x = long, y = lat, group = group),
-               color = "black", fill = 'gray', size = 0.25) + 
-  geom_polygon(data = BRA, aes(x = long, y = lat, group = group),
-               color = "black", fill = 'gray', size = 0.25) + 
-  geom_polygon(data = PER, aes(x = long, y = lat, group = group),
-               color = "black", fill = 'gray', size = 0.25) + 
-  geom_polygon(data = ECU, aes(x = long, y = lat, group = group),
-               color = "black", fill = 'gray', size = 0.25) + 
-  geom_polygon(data = PAN, aes(x = long, y = lat, group = group),
-               color = "black", fill = 'gray', size = 0.25) + 
-  
-  
-  geom_polygon(data = COL_admin1, aes(x = long, y = lat, group = group),
-               color = "white", fill = 'black', size = 0.25) +
-  theme(panel.background = element_rect(fill = "black",
-                                        colour = "white",
-                                        size = 0.5, linetype = "solid")) +
+  geom_polygon(data = admin1, aes(x = long, y = lat, group = group),
+               color = "black", fill = 'gray', size = 0.25) +
+  geom_polygon(data = admin2, aes(x = long, y = lat, group = group),
+               color = "black", fill = 'black', size = 0.25) + 
+  geom_polygon(data = admin3, aes(x = long, y = lat, group = group),
+               color = "black", fill = 'gray', size = 0.25) +
+  geom_polygon(data = admin4, aes(x = long, y = lat, group = group),
+               color = "black", fill = 'gray', size = 0.25) +
+  geom_polygon(data = admin5, aes(x = long, y = lat, group = group),
+               color = "black", fill = 'gray', size = 0.25) +
+  geom_polygon(data = admin6, aes(x = long, y = lat, group = group),
+               color = "black", fill = 'gray', size = 0.25) +
   coord_fixed(xlim =c(-79, -67), ylim=c(-5, 13), ratio = 1) +
   xlab ('') + ylab('') +
   #remove coordinate lines on water
-  theme(panel.background = element_rect(fill = "lightblue"), panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
+  theme(panel.background = element_rect(fill = "lightblue"), 
+        panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
   #remove margins
   theme(plot.margin=unit(c(0,0,0,0),"mm"))  
 
-#map
+map
 
 ############# DATA
 
 # Import lat/long of cities
 lat_lon <- read.csv("figures/data/lat_lon_complete.txt", 
-                         sep='\t', 
-                         stringsAsFactors = FALSE,
-                         header = TRUE)
+                    sep='\t', 
+                    stringsAsFactors = FALSE,
+                    header = TRUE)
 
 # format and pad admin2 with zeros
 lat_lon$admin2 <- sprintf("%05d", lat_lon$admin2)
@@ -82,9 +68,9 @@ lat_lon$admin2 <- as.character(lat_lon$admin2)
 
 # load disease data
 chik <- read.csv("figures/data/chik_first_reported_cases_338.txt", # invasion times start at week 1
-                      sep='\t', 
-                      stringsAsFactors = FALSE,
-                      header = TRUE)
+                 sep='\t', 
+                 stringsAsFactors = FALSE,
+                 header = TRUE)
 
 # format and pad admin2 with zeros
 chik$admin2_code <- sprintf("%05d", chik$admin2_code)
@@ -268,67 +254,54 @@ saveRDS(chik_map, "chik_map_for_figure1_first_reports.RDS")
 # Load these packages
 library(raster)
 library(sp)
-library(rgdal)     # R wrapper around GDAL/OGR
 library(ggplot2)   # for general plotting
-library(ggmap)    # for fortifying shapefiles
 library(ggpubr)    # for arranging combined ggplots
 library(dplyr)
+library(rnaturalearth)
 
-# Reading areal polygon data into R
+# Reading shapefile data into R
+spdf_world <- ne_countries()
 
-par(mar=c(0,0,0,0))
+# crop the extent
+e <- extent(-80,-66,-6,12)
 
-# Colombia shapefiles
-adm1data <- getData('GADM', country = 'COL', level = 1)
-adm0data <- getData('GADM', country = 'COL', level = 0)
+america <- crop(spdf_world, e)
 
-# Bordering countries
-adm0data_VEN <- getData('GADM', country = 'VEN', level = 0)
-adm0data_BRA <- getData('GADM', country = 'BRA', level = 0)
-adm0data_PER <- getData('GADM', country = 'PER', level = 0)
-adm0data_ECU <- getData('GADM', country = 'ECU', level = 0)
-adm0data_PAN <- getData('GADM', country = 'PAN', level = 0)
+plot(america)
 
-# Prepare shapefile for use in ggplot
-COL_admin0 <- fortify(adm0data)
-COL_admin1 <- fortify(adm1data)
-
-VEN <- fortify(adm0data_VEN)
-BRA <- fortify(adm0data_BRA)
-PER <- fortify(adm0data_PER)
-ECU <- fortify(adm0data_ECU)
-PAN <- fortify(adm0data_PAN)
+admin0 <- fortify(america)
+admin1 <- filter(admin0, group == 22.1)
+admin2 <- filter(admin0, group == 35.1) # Colombia
+admin3 <- filter(admin0, group == 46.1)
+admin4 <- filter(admin0, group == 123.1)
+admin5 <- filter(admin0, group == 124.1)
+admin6 <- filter(admin0, group == 170.1)
 
 # base map
 
 map <- ggplot() +
-  geom_polygon(data = COL_admin0, aes(x = long, y = lat, group = group),
-               color = "black", fill = 'gray', size = 0.25) + 
-  geom_polygon(data = VEN, aes(x = long, y = lat, group = group),
-               color = "black", fill = 'gray', size = 0.25) + 
-  geom_polygon(data = BRA, aes(x = long, y = lat, group = group),
-               color = "black", fill = 'gray', size = 0.25) + 
-  geom_polygon(data = PER, aes(x = long, y = lat, group = group),
-               color = "black", fill = 'gray', size = 0.25) + 
-  geom_polygon(data = ECU, aes(x = long, y = lat, group = group),
-               color = "black", fill = 'gray', size = 0.25) + 
-  geom_polygon(data = PAN, aes(x = long, y = lat, group = group),
-               color = "black", fill = 'gray', size = 0.25) + 
-  
-  
-  geom_polygon(data = COL_admin1, aes(x = long, y = lat, group = group),
-               color = "white", fill = 'black', size = 0.25) +
-  theme(panel.background = element_rect(fill = "black",
-                                        colour = "white",
-                                        size = 0.5, linetype = "solid")) +
+  geom_polygon(data = admin1, aes(x = long, y = lat, group = group),
+               color = "black", fill = 'gray', size = 0.25) +
+  geom_polygon(data = admin2, aes(x = long, y = lat, group = group),
+               color = "black", fill = 'black', size = 0.25) + 
+  geom_polygon(data = admin3, aes(x = long, y = lat, group = group),
+               color = "black", fill = 'gray', size = 0.25) +
+  geom_polygon(data = admin4, aes(x = long, y = lat, group = group),
+               color = "black", fill = 'gray', size = 0.25) +
+  geom_polygon(data = admin5, aes(x = long, y = lat, group = group),
+               color = "black", fill = 'gray', size = 0.25) +
+  geom_polygon(data = admin6, aes(x = long, y = lat, group = group),
+               color = "black", fill = 'gray', size = 0.25) +
   coord_fixed(xlim =c(-79, -67), ylim=c(-5, 13), ratio = 1) +
   xlab ('') + ylab('') +
   #remove coordinate lines on water
-  theme(panel.background = element_rect(fill = "lightblue"), panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
+  theme(panel.background = element_rect(fill = "lightblue"), 
+        panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
   #remove margins
   theme(plot.margin=unit(c(0,0,0,0),"mm"))  
 
-#map
+map
+
 
 ############# DATA
 
@@ -344,9 +317,9 @@ lat_lon$admin2 <- as.character(lat_lon$admin2)
 
 # load disease data
 zika <- read.csv("figures/data/zika_first_reported_cases_288.txt", # weeks start at 1
-                      sep='\t', 
-                      stringsAsFactors = FALSE,
-                      header = TRUE)
+                 sep='\t', 
+                 stringsAsFactors = FALSE,
+                 header = TRUE)
 
 # format and pad admin2 with zeros
 zika$admin2_code <- sprintf("%05d", zika$admin2_code)
@@ -528,7 +501,6 @@ saveRDS(zika_map, "zika_map_for_figure1_first_reports.RDS")
 # put CHIKV map and ZIKV maps together
 
 library(ggplot2)   # for general plotting
-library(ggmap)    # for fortifying shapefiles
 library(ggpubr)    # for arranging combined ggplots
 
 chik_map <- readRDS("chik_map_for_figure1_first_reports.RDS")

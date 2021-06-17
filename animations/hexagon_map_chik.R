@@ -19,7 +19,7 @@ library(gganimate)
 library(transformr)
 
 # load disease data
-chik <- read.csv("animations/data/chik_monthly_inc_for_animation_incl2016.txt", 
+chik <- read.csv("animations/data/chik_monthly_inc_for_animation.txt", 
                       sep='\t', 
                       stringsAsFactors = FALSE,
                       header = TRUE)
