@@ -1,14 +1,14 @@
 # zika_chik_invasion
 
-The models folder in this repository contains the data files and models necessary to reproduce the main analysis in our paper "Spatial and temporal invasion dynamics of the 2014-2017 Zika and chikungunya epidemics in Colombia." The figures folder contains the data and code necessary to reproduce the figures in the main text. The animations folder contains the data and code necessary to reproduce the animated hexagon maps (S1 and S2 Movies). For a description of the datasets, see the bottom of this README file.
+The models folder in this repository contains the data files and models necessary to reproduce the main analysis in our paper "Spatial and temporal invasion dynamics of the 2014-2017 Zika and chikungunya epidemics in Colombia" which is now published in PLoS Comp Bio. The figures folder contains the data and code necessary to reproduce the figures in the main text. The animations folder contains the data and code necessary to reproduce the animated hexagon maps (S1-S2 Movies). The time series folder contains the weekly time series of reported chikungunya fever and Zika virus disease cases at administrative level 2 (city). For a description of the datasets, see the bottom of this README file.
 
 ## What does it do?
 
 The model functions include:
-* **gravity_model**: implements a gravity model using Metropolis-Hastings Markov chain Monte Carlo 
+* **gravity_model**: implements a gravity model using Metropolis-Hastings Markov chain Monte Carlo (MCMC)
 * **get_params**: extracts the posterior distribution of parameters, log likelihood, and acceptances for each of three chains
-* **calc_accept**: calculates acceptance rates of parameters
-* **calc_dic**: calculates the Deviance Information Criteria (DIC) for each of three MCMC chains
+* **calc_accept**: calculates acceptance rate of parameters
+* **calc_dic**: calculates the deviance information criteria for each of three MCMC chains
 * **calc_med_est**: calculates median parameter estimates 95% credible intervals 
 * **plot_res**: plots histograms of the posterior distributions of parameters and MCMC traces
 
@@ -20,7 +20,7 @@ The following data are provided to run the gravity models:
 * **infectious**: integer matrix with weeks as rows and cities as columns where the matrix element in row i and column j equals 0 if the city corresponding to column j is susceptible at time i, and equals 1 if the city corresponding to column j is infectious at time i. This matrix is based off of the I matrix. All of the values are shifted down by one row to represent a one week time lag from being invaded to becoming infectious. 
 * **J**: integer matrix with weeks as rows and cities as columns. This is based off of the infectious matrix. J equals NA when infectious equals 1 and J equals 1 when infectious equals 0. A value of 1 for J indicates that a city contributes to the likelihood during that week. The first infected cities have NA for all time points and never contribute to the likelihood
 * **N**: vector with population sizes for each city. Data comes from DANE 2016 estimates derived from the 2005 Colombia Census. Population sizes were divided by 10,000.
-* **H**: matrix with weeks as rows and cities as columns. Values are the weekly case counts weighted by each infection’s generation time.
+* **H**: matrix with weeks as rows and cities as columns. Values are the weekly case counts weighted by each infection’s generation time distribution.
 
 ## Model specifications
 
@@ -44,7 +44,7 @@ Matrix with weeks as rows and cities as columns. This is based off of the infect
 * **S5: chik_N.txt**
 Vector with population sizes for each city. Data comes from DANE 2016 projections derived from the 2005 Colombia Census. Population sizes were divided by 10,000.
 * **S6: chik_H.txt**
-Matrix with weeks as rows and cities as columns. Values are the weekly case counts weighted by each infection’s generation time.
+Matrix with weeks as rows and cities as columns. Values are the weekly case counts weighted by the generation time distribution for CHIKV.
 * **S7: zika_d_cities.txt**
 Matrix where rows and columns are cities. Values are the geographic distance between each city in km. Zeroes, which represent the distance between one city and itself, on the diagonal have been replaced by NA to avoid dividing by 0 in the calculation of the distance kernel.
 * **S8: zika_I.txt**
@@ -56,7 +56,7 @@ Matrix with weeks as rows and cities as columns. This is based off of the infect
 * **S11: zika_N.txt**
 Vector with population sizes for each city. Data comes from DANE 2016 projections derived from the 2005 Colombia Census. Population sizes were divided by 10,000.
 * **S12: zika_H.txt**
-Matrix with weeks as rows and cities as columns. Values are the weekly case counts weighted by each infection’s generation time.
+Matrix with weeks as rows and cities as columns. Values are the weekly case counts weighted by the generation time distribution for ZIKV.
 
 ### Data for figures (main text)
 * **S1-S12** (see above for details)
@@ -160,3 +160,17 @@ month_num: calendar month number,
 month_name: calendar month name,
 year: year,
 inc_rate: number of cases divided by population of department times 100,000
+
+### Administrative level 2 time series
+* **S33 Data. chik_admin2_time_series.txt** Time series of reported chikungunya fever cases at admin level 2 consisting of 5 variables. Used to determine invasion weeks and calculate infectivity matrix. 
+disease: CHIKV, 
+admin2: municipality code, 
+week: epidemiological week, 
+year: year, 
+cases: number of reported cases
+* **S34 Data. zika_admin2_time_series.txt** Time series of reported ZIKV disease cases at admin level 2 consisting of 5 variables. Used to determine invasion weeks and calculate infectivity matrix. 
+disease: ZIKV, 
+admin2: municipality code, 
+week: epidemiological week, 
+year: year, 
+cases: number of reported cases
